@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AImen</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+
+  body {
+    font-family: 'Comic Neue', cursive, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;  
+    overflow: hidden;
+  }
+  
+  body.girl {
+    background: #FFF0F5;
+    background-image:
+      radial-gradient(circle, #FFD6E8 1.5px, transparent 1.5px),
+      radial-gradient(circle, #FFAEC9 1.5px, transparent 1.5px);
+    background-position: 0 0, 20px 20px;
+    background-size: 40px 40px;
+    color: #5A4E7C;
+  }
+
+  body.boy {
+    background: #E6F0FF;
+    background-image:
+      radial-gradient(circle, #B3D1FF 1.5px, transparent 1.5px),
+      radial-gradient(circle, #99C2FF 1.5px, transparent 1.5px);
+    background-position: 0 0, 20px 20px;
+    background-size: 40px 40px;
+    color: #2F4F6F;
+  }
+
+  .container {
+    background: #ffffffdd;
+    border-radius: 30px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    padding: 10px 25px 15px;
+    max-width: 720px;
+    width: 100%;
+    text-align: center;
+    max-height: 80vh; 
+    overflow-y: auto;  
+    margin: 20px auto;
+  }
+
+  h1 {
+    font-size: 2.4rem;
+    margin-bottom: 25px;
+  }
+
+  body.girl h1 {
+    color: #FFB6C1;
+    text-shadow: 1px 1px 6px #F9C1D9;
+  }
+
+  body.boy h1 {
+    color: #3399FF;
+    text-shadow: 1px 1px 6px #A7D3FF;
+  }
+
+  .buttons {
+    margin-bottom: 35px;
+  }
+
+  form {
+    display: inline-block;
+    margin: 8px;
+  }
+
+  button {
+    border: 3px solid;
+    font-weight: 700;
+    padding: 14px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    letter-spacing: 1.2px;
+    position: relative;
+    transition: transform 0.25s ease, background 0.3s ease, box-shadow 0.3s ease;
+    user-select: none;
+  }
+
+  body.girl button {
+    background: linear-gradient(145deg, #FFD6E8, #FFAEC9);
+    border-color: #FF9CC2;
+    color: #5A4E7C;
+    box-shadow: 4px 4px 10px #FF9CC2AA, -4px -4px 10px #FFC9D8AA;
+  }
+
+  body.girl button:hover {
+    background: linear-gradient(145deg, #FFAEC9, #FFD6E8);
+    box-shadow: 0 0 20px #FF9CC2;
+    transform: scale(1.07);
+  }
+
+  body.boy button {
+    background: linear-gradient(145deg, #B3D1FF, #99C2FF);
+    border-color: #66A3FF;
+    color: #2F4F6F;
+    box-shadow: 4px 4px 10px #99BBFFAA, -4px -4px 10px #CCE0FFAA;
+  }
+
+  body.boy button:hover {
+    background: linear-gradient(145deg, #99C2FF, #B3D1FF);
+    box-shadow: 0 0 20px #66A3FF;
+    transform: scale(1.07);
+  }
+
+  .btn-fear::before { content: "😨 "; }
+  .btn-joy::before { content: "😊 "; }
+  .btn-sadness::before { content: "😢 "; }
+  .btn-anger::before { content: "😡 "; }
+  .btn-anxiety::before { content: "😰 "; }
+  .btn-gratitude::before { content: "🙏 "; }
+  .btn-peace::before { content: "☮️ "; }
+
+  hr {
+    border: none;
+    height: 3px;
+    margin: 40px auto;
+    width: 80%;
+    border-radius: 15px;
+  }
+
+  body.girl hr {
+    background: #FFB6C1;
+    box-shadow: 0 0 15px #F9C1D9;
+  }
+
+  body.boy hr {
+    background: #66A3FF;
+    box-shadow: 0 0 15px #B3D1FF;
+  }
+
+  .verse {
+    background: white;
+    border-radius: 25px;
+    box-shadow: 5px 5px 18px #EAD7F7;
+    padding: 25px 30px;
+    margin-top: -10px;
+    text-align: left;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease forwards;
+    display: block;
+  }
+
+  .explanation {
+    margin-top: 10px;
+    font-style: italic;
+  }
+
+  @keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(15px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body class="{{ gender }}">
+  <div class="container">
+    <h1>Hello, {{ name }}! Select Your Emotion:</h1>
+    <div class="buttons">
+      {% for emo in emotions %}
+        <form method="get">
+          <input type="hidden" name="emotion" value="{{ emo }}">
+          <button type="submit" class="btn-{{ emo|lower }}">{{ emo }}</button>
+        </form>
+      {% endfor %}
+    </div>
+
+    {% if selected_emotion and verse %}
+    <hr />
+    <div class="verse">
+        <h3>{{ verse.verse }}</h3>
+        <p><strong>Verse:</strong> {{ verse.text }}</p>
+        <p class="explanation"><strong>Explanation:</strong> {{ verse.explanation }}</p>
+    </div>
+    {% elif selected_emotion %}
+    <p class="no-verses">No verses available for this emotion.</p>
+    {% endif %}
+  </div>
+</body>
+</html>
